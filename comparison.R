@@ -22,7 +22,7 @@ colnames(BRCA) <- make.names(colnames(BRCA))
 # try first 10000 variables
 nData <- BRCA[,-1]
 # pvals <- sapply(3:ncol(BRCA), function(i) wilcox.test(BRCA[,i]~BRCA[,2])$p.value) # takes a short while
-save(pvals, file = "pvals.rda")
+# save(pvals, file = "pvals.rda")
 load("pvals.rda")
 # Training the black box.
 nData <- BRCA[,c(2,2 + which(pvals < 0.001))]
@@ -33,6 +33,11 @@ nData <- nData[c(nind1, nind2),]
 ### Explaining the model. ----
 # 1. Using randomForestExplainer - globally.
 # 2. Using lime package - locally.
+# ?lime
+lime_explanation <- lime(nData[, -which(colnames(nData) == "survival_status")], trees)
+model_type.randomForest <- function(x, ...) "classification"
+# better use mlr.
+forest_explained <- lime::explain(nData[2, -which(colnames(nData) == "survival_status")], lime_explanation, n_labels = 1, n_features = 10)
 # 3. Using live package - locally.
 similar <- sample_locally(data = nData,
                           explained_instance = nData[2,],
@@ -53,4 +58,7 @@ plot_explanation(trained,
 ### Visualization tools.
 # 1. PDP-plots.
 # 2. Plots from lime package.
+plot_features(forest_explained)
+plot_explanations(forest_explained)
+# Add interpretation.
 # 3. Plots from live.
