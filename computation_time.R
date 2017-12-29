@@ -83,20 +83,44 @@ datatable_neighbourhood4 <- function(dataset_size = 2000) {
   tmp <- as.data.table(rbindlist(lapply(1:dataset_size, function(x) nData[1, ])))
   for(k in 1:nrow(tmp)) {
     picked_var <- sample(1:ncol(tmp), 1)
-    set(tmp, i = as.integer(k), j = picked_var,
+    set(tmp, i = as.integer(k), j = as.integer(picked_var),
         sample(nData[, picked_var], 1))
   }
   tmp
 }
 datatable_neighbourhood5 <- function(dataset_size = 2000) {
-  tmp <- as.data.table(rbindlist(lapply(1:dataset_size, function(x) nData[1, ])))
+  tmp <- rbindlist(lapply(1:dataset_size, function(x) nData[1, ]))
   for(k in 1:nrow(tmp)) {
     picked_var <- (k %% ncol(tmp)) + 1
-    set(tmp, i = as.integer(k), j = picked_var,
+    set(tmp, i = as.integer(k), j = as.integer(picked_var),
         sample(nData[, picked_var], 1))
     }
   tmp
 }
+
+datatable_neighbourhood7 <- function(dataset_size = 2000) {
+  tmp <- rbindlist(lapply(1:dataset_size, function(x) nData[1, ]))
+  for(k in 1:nrow(tmp)) {
+    picked_var <- sample(1:ncol(nData), 1)
+    set(tmp, i = as.integer(k), j = as.integer(picked_var),
+        sample(nData[, picked_var], 1))
+  }
+  tmp
+}
+simple_neighbourhood <- function(dataset_size = 2) {
+  tmp <- as.data.frame(rbindlist(lapply(1:dataset_size, function(x) nData[1, ])))
+  picked <- sample(1:ncol(nData), nrow(tmp), replace = T)
+  tmp[matrix(ncol = 2,
+             byrow = F,
+             c(1:nrow(tmp), picked))] <- unlist(lapply(1:nrow(tmp), function(x) sample(nData[, picked[x]], 1)))
+  tmp
+} # Something's wrong.
+# datatable_neighbourhood6 <- function(dataset_size = 2000) {
+#   tmp <- rbindlist(lapply(1:dataset_size, function(x) nData[1, ]))
+#   set(tmp, i = 1:nrow(tmp), j = sample(1:ncol(nData), nrow(tmp), replace = TRUE),
+#         sample(nData[, picked_var], 1))
+#   tmp
+# } # Can't be done this way.
 # Compare performance
 # microbenchmark(live_neighbourhood)
 # microbenchmark(live_neighbourhood(), datatable_neighbourhood())
@@ -109,11 +133,13 @@ datatable_neighbourhood5 <- function(dataset_size = 2000) {
 # microbenchmark(live_neighbourhood(100), datatable_neighbourhood4(100))
 # microbenchmark(datatable_neighbourhood3(100), datatable_neighbourhood4(100))
 compare_time <- microbenchmark(live_neighbourhood(100), simple_solution(100), datatable_neighbourhood3(100),
-               datatable_neighbourhood4(100))
+               datatable_neighbourhood4(100), datatable_neighbourhood5(100))
 compare_time
 compare_time_big <- microbenchmark(live_neighbourhood(), simple_solution(),
-                                   datatable_neighbourhood3(),
-                                   datatable_neighbourhood4())
+                                   datatable_neighbourhood3(), datatable_neighbourhood4(),
+                                   datatable_neighbourhood5())
 compare_time_big
-microbenchmark(datatable_neighbourhood4(100), datatable_neighbourhood5(100))
-# Add Rcpp-based function.
+# microbenchmark(datatable_neighbourhood4(100), datatable_neighbourhood5(100))
+# TODO: Add Rcpp-based function.
+microbenchmark(simple_neighbourhood(100), datatable_neighbourhood4(100))
+microbenchmark(datatable_neighbourhood4(100), datatable_neighbourhood5(100), datatable_neighbourhood7(100))
