@@ -10,6 +10,7 @@ library(MLExpRessoData)
 library(randomForest)
 library(randomForestExplainer)
 library(pdp)
+library(ALEPlot)
 ### Code from TCGA vignette. ----
 set.seed(1)
 # homemade functions
@@ -86,3 +87,5 @@ plot_explanation(trained,
 plot_explanation(trained,
                  regr_plot_type = "waterfallplot",
                  explained_instance = nData[1,])
+ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "CALM2"),
+        pred.fun = function(X.model, newdata) predfun(X.model, newdata))
