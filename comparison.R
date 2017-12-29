@@ -89,3 +89,7 @@ plot_explanation(trained,
                  explained_instance = nData[1,])
 ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "CALM2"),
         pred.fun = function(X.model, newdata) predfun(X.model, newdata))
+ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "AKR1E2"),
+        pred.fun = function(X.model, newdata) predfun(X.model, newdata))
+ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "ATP5B"),
+        pred.fun = function(X.model, newdata) predfun(X.model, newdata))
