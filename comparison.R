@@ -83,10 +83,10 @@ plot(ice_explanation, centered = T)
 # 5. Plots from live.
 plot_explanation(trained,
                  regr_plot_type = "forestplot",
-                 explained_instance = nData[1,])
+                 explained_instance = nData[2,])
 plot_explanation(trained,
                  regr_plot_type = "waterfallplot",
-                 explained_instance = nData[1,])
+                 explained_instance = nData[2,])
 ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "CALM2"),
         pred.fun = function(X.model, newdata) predfun(X.model, newdata))
 ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "AKR1E2"),
