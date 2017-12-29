@@ -41,15 +41,20 @@ nData <- nData[c(nind1, nind2),]
 load("importance_frame.rda")
 # 2. Using lime package - locally.
 # ?lime
+explained_instance_number <- 2
 lime_explanation <- lime(nData[, -which(colnames(nData) == "survival_status")], trees)
 model_type.randomForest <- function(x, ...) "classification"
 # better use mlr.
-forest_explained <- lime::explain(nData[2, -which(colnames(nData) == "survival_status")], lime_explanation, n_labels = 1, n_features = 10)
+forest_explained <- lime::explain(nData[explained_instance_number,
+                                        -which(colnames(nData) == "survival_status")],
+                                  lime_explanation, n_labels = 1, n_features = 10)
 # 3. Using live package - locally.
 similar <- sample_locally(data = nData,
-                          explained_instance = nData[2,],
+                          explained_instance = nData[explained_instance_number,],
                           explained_var = "survival_status",
                           size = 2000)
+# dim(unique(similar$data))
+# similar$data <- unique(similar$data)
 similar <- add_predictions(nData, similar,
                            black_box_model = trees,
                            predict_fun = predfun)
@@ -83,10 +88,10 @@ plot(ice_explanation, centered = T)
 # 5. Plots from live.
 plot_explanation(trained,
                  regr_plot_type = "forestplot",
-                 explained_instance = nData[2,])
+                 explained_instance = nData[explained_instance_number,])
 plot_explanation(trained,
                  regr_plot_type = "waterfallplot",
-                 explained_instance = nData[2,])
+                 explained_instance = nData[explained_instance_number,])
 ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "CALM2"),
         pred.fun = function(X.model, newdata) predfun(X.model, newdata))
 ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "AKR1E2"),
