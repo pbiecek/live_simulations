@@ -83,9 +83,18 @@ datatable_neighbourhood4 <- function(dataset_size = 2000) {
   tmp <- as.data.table(rbindlist(lapply(1:dataset_size, function(x) nData[1, ])))
   for(k in 1:nrow(tmp)) {
     picked_var <- sample(1:ncol(tmp), 1)
-    set(tmp, i = k, j = picked_var,
+    set(tmp, i = as.integer(k), j = picked_var,
         sample(nData[, picked_var], 1))
   }
+  tmp
+}
+datatable_neighbourhood5 <- function(dataset_size = 2000) {
+  tmp <- as.data.table(rbindlist(lapply(1:dataset_size, function(x) nData[1, ])))
+  for(k in 1:nrow(tmp)) {
+    picked_var <- (k %% ncol(tmp)) + 1
+    set(tmp, i = as.integer(k), j = picked_var,
+        sample(nData[, picked_var], 1))
+    }
   tmp
 }
 # Compare performance
@@ -106,3 +115,5 @@ compare_time_big <- microbenchmark(live_neighbourhood(), simple_solution(),
                                    datatable_neighbourhood3(),
                                    datatable_neighbourhood4())
 compare_time_big
+microbenchmark(datatable_neighbourhood4(100), datatable_neighbourhood5(100))
+# Add Rcpp-based function.
