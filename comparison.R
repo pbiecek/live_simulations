@@ -92,9 +92,22 @@ plot_explanation(trained,
 plot_explanation(trained,
                  regr_plot_type = "waterfallplot",
                  explained_instance = nData[explained_instance_number,])
-ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "CALM2"),
+ALEPlot(nData[, colnames(nData) != "survival_status"], trees, J = which(colnames(nData) == "CALM2"),
         pred.fun = function(X.model, newdata) predfun(X.model, newdata))
-ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "AKR1E2"),
+ALEPlot(nData[, colnames(nData) != "survival_status"], trees, J = which(colnames(nData) == "AKR1E2"),
         pred.fun = function(X.model, newdata) predfun(X.model, newdata))
-ALEPlot(nData[, -which(colnames(nData) == "survival_status")], trees, J = which(colnames(nData) == "ATP5B"),
+ALEPlot(nData[, colnames(nData) != "survival_status"], trees, J = which(colnames(nData) == "ATP5B"),
         pred.fun = function(X.model, newdata) predfun(X.model, newdata))
+
+# Przykład dla ALEPlot na HR data.
+library(breakDown)
+data(HR_data)
+
+hr_rf <- randomForest(left ~., data = HR_data, ntree = 1000)
+HR_data
+hr_lm <- lm(left ~., data = HR_data)
+
+ALEPlot(HR_data[, colnames(HR_data) != "left"], hr_rf, J = which(colnames(HR_data) == "satisfaction_level"),
+        pred.fun = function(X.model, newdata) predict(X.model, newdata))
+ALEPlot(HR_data[, colnames(HR_data) != "left"], hr_rf, J = which(colnames(HR_data) == "satisfaction_level"))
+ALEPlot(HR_data[, colnames(HR_data) != "left"], hr_lm, J = which(colnames(HR_data) == "satisfaction_level"))
