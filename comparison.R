@@ -71,6 +71,8 @@ plot_explanations(forest_explained)
 # 3. PDP-plots.
 # pdp_explanation <- partial(trees, pred.var = c("STC2", "CALM2", "PGK1")) # takes a while
 # pdp_explanation <- partial(trees, pred.var = c("CALM2"), ice = TRUE, type = "classification") # takes a while
+pdp_explanation <- pdp::partial(trees, pred.var = "STC2",
+                                train = nData)
 save(pdp_explanation, file = "pdp_explanation.rda")
 load("pdp_explanation.rda")
 plotPartial(pdp_explanation)
@@ -111,3 +113,39 @@ ALEPlot(HR_data[, colnames(HR_data) != "left"], hr_rf, J = which(colnames(HR_dat
         pred.fun = function(X.model, newdata) predict(X.model, newdata))
 ALEPlot(HR_data[, colnames(HR_data) != "left"], hr_rf, J = which(colnames(HR_data) == "satisfaction_level"))
 ALEPlot(HR_data[, colnames(HR_data) != "left"], hr_lm, J = which(colnames(HR_data) == "satisfaction_level"))
+
+
+### Wykresy dla wine quality.
+library(e1071)
+data("winequality_red")
+wine_svm <- svm(quality ~., data = winequality_red)
+wine_svm
+pd_function <- pdp::partial(wine_svm, pred.var = "fixed_acidity",
+                            train = winequality_red)
+plotPartial(pd_function)
+class(wine_svm)
+?pdp::partial
+
+glimpse(winequality_red)
+
+summarise_all(winequality_red, n_distinct)
+
+wine_svm <- ksvm(quality ~ ., data = winequality_red)
+pd_function <- pdp::partial(wine_svm, pred.var = "density",
+                            train = winequality_red)
+plotPartial(pd_function)
+
+data("boston")
+library(randomForest)
+boston.rf <- randomForest(cmedv ~ ., data = boston, importance = TRUE)
+boston.rf %>% # the %>% operator is read as "and then"
+  pdp::partial(pred.var = "lstat") %>%
+  plotPartial(smooth = TRUE, lwd = 2, ylab = expression(f(lstat)))
+
+library(breakDown)
+data(HR_data)
+glimpse(HR_data)
+hr_svm <- svm(left ~., data = HR_data)
+pd_function <- pdp::partial(hr_svm, "last_evaluation")
+save(pd_function, file = "pd_function.rda")
+plotPartial(pd_function)
