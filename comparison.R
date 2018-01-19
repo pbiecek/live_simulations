@@ -44,10 +44,12 @@ load("importance_frame.rda")
 explained_instance_number <- 2
 lime_explanation <- lime(nData[, -which(colnames(nData) == "survival_status")], trees)
 model_type.randomForest <- function(x, ...) "classification"
+str(lime_explanation)
 # better use mlr.
 forest_explained <- lime::explain(nData[explained_instance_number,
                                         -which(colnames(nData) == "survival_status")],
                                   lime_explanation, n_labels = 1, n_features = 10)
+str(forest_explained)
 # 3. Using live package - locally.
 similar <- sample_locally(data = nData,
                           explained_instance = nData[explained_instance_number,],
