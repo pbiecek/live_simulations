@@ -1,36 +1,33 @@
 # Examples for PFI type packages.
+library(e1071)
 library(pdp)
-# library(ICEbox)
-# library(ALEPlot)
-# library(mlr)
-# library(dplyr)
-library(breakDown)
-library(kernlab)
+library(ICEbox)
+library(ALEPlot)
+library(corrplot)
+
+corrplot(cor(winequality_red))
 
 load("winequality_red.rda")
-wine_svm <- ksvm(quality ~., data = winequality_red)
+winequality_red <- as.data.frame(winequality_red) # important. pdp sucks with tibbles
+wine_svm <- svm(quality ~., data = winequality_red)
 wine_pd <- pdp::partial(wine_svm, pred.var = "pH",
-                        train = winequality_red[, -12])
-pdp::autoplot(wine_pd)
+                        train = winequality_red)
 plotPartial(wine_pd)
-data("boston")
-boston_svm <- e1071::svm(cmedv ~., data = boston)
-pd_boston <- pdp::partial(boston_svm, pred.var = "lstat")
-plotPartial(pd_boston)
 
-boston_rf <- randomForest::randomForest(cmedv ~., data = boston)
-pd_boston_rf <- pdp::partial(boston_rf, pred.var = "lstat")
-dim(pd_boston_rf)
-plotPartial()
+wine_ice <- ice(wine_svm, winequality_red, winequality_red$quality,
+                predictor = "pH")
+plot(wine_ice, plot_points_indices = 1:2, frac_to_plot = 1)
 
-library(mlr)
-wine_task <- makeRegrTask("wine", winequality_red, "quality")
-lrn <- makeLearner("regr.svm")
-wine_svm <- train(lrn, wine_task)
-wine_partial_mlr <- mlr::generatePartialDependenceData(wine_svm,
-                                                       input = wine_task,
-                                                       features = "pH")
-mlr::plotPartialDependence(wine_partial_mlr)
-wine_partial_mlr
 
-n_distinct(winequality_red$fixed_acidity)
+ALEPlot(winequality_red[, -12], wine_svm,
+        J = which(colnames(winequality_red) == "pH"),
+        pred.fun = function(X.model, newdata) predict(X.model, newdata))
+
+
+# Maybe write an issue
+# data("WhiteWine")
+# white_svm <- svm(quality ~., data = WhiteWine)
+# white_ice <- ice(white_svm, WhiteWine, WhiteWine$quality,
+#                  predictor = "pH")
+# plot(wine_ice, plot_points_indices = 1, frac_to_plot = 1,
+#      plot_pdp = F)
