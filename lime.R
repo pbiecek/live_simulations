@@ -3,7 +3,7 @@ library(tidyverse)
 library(breakDown)
 library(live)
 library(mlr)
-
+library(randomForest)
 data("winequality_red")
 
 
@@ -17,4 +17,4 @@ to_explain_lime <- lime(winequality_red[, -12], similar$model)
 model_type.randomForest <- function(x, ...) "regression"
 explanation <- lime::explain(winequality_red[5, -12],
                        to_explain_lime,
-                       n_features = 10)
+                       n_features = 5)
