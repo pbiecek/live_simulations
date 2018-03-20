@@ -18,6 +18,11 @@ svm_explained <- lime::explain(winequality_red[88, -nc],
 plot_features(svm_explained)
 plot_explanations(svm_explained)
 
+# breakDown
+explain_bd <- broken(wine_svm, new_observation = winequality_red[88, -nc],
+                     data = winequality_red[, -nc],
+                     predict.function = kernlab:::predict)
+plot(explain_bd)
 
 ### Maybe write an issue ----
 # data("WhiteWine")
