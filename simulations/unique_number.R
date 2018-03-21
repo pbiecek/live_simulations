@@ -39,5 +39,5 @@ for(i in 1:n_it) {
                     function(x) any(tmp[x, ] != nData[explained_instance_number, -1]))))
 
 }
-save(unique_count, file = "unique_count.rda")
+save(unique_count, file = "../rda_files/unique_count.rda")
 hist(unique_count)
