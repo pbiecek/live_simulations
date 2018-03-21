@@ -53,3 +53,7 @@ shp %>%
   xtable()
 p <- shapleyr:::plot.shapley.singleValue(5, shp, task = tsk, model = train("regr.svm", tsk))
 p$data
+bench <- benchmark(c("regr.randomForest", "regr.svm", "regr.nnet",
+                     "regr.xgboost", "regr.lm"),
+                   tsk)
+bench
