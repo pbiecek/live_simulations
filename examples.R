@@ -40,7 +40,7 @@ plot_explanation(wine_expl_live2, "waterfallplot", winequality_red[5, ])
 # SHAP
 # requires the use of mlr
 tsk <- makeRegrTask("wine", winequality_red, "quality")
-shp <- shapley(1, model = train("regr.lm", tsk), task = tsk)
+shp <- shapley(5, model = train("regr.svm", tsk), task = tsk)
 # plot.shapley.singleValue(1, model = train("regr.lm", tsk), task = tsk)
 brk <- data.frame(var = explain_bd$variable_name, explain_bd$contribution)
 shp %>%
@@ -51,3 +51,5 @@ shp %>%
   mutate_if(is.numeric, function(x) round(x, 2)) %>%
   filter(!(var %in% c("Intercept", ""))) %>%
   xtable()
+p <- shapleyr:::plot.shapley.singleValue(5, shp, task = tsk, model = train("regr.svm", tsk))
+p$data
