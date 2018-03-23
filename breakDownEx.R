@@ -4,6 +4,7 @@ library(randomForest)
 library(breakDown)
 library(mlr)
 library(ggplot2)
+library(DALEX)
 
 set.seed(14)
 X <- mvrnorm(200, rep(0, 2), matrix(c(1, 0, 0, 1), nrow = 2))
@@ -70,3 +71,29 @@ plot(single_variable(expll, variable = "x2"),
   geom_point(data = data.frame(x = anscombe$x2, y = predict(rff)),
              aes(x, y), inherit.aes = F, color = "blue")
 
+
+#
+n <- 1000
+nc <- 3
+nl <- 2
+transf <- exp
+X3 <- mvrnorm(n, rep(0, nc), diag(1, nc))
+Y <- X3[, 1:nl, drop = F]%*%rep(4, nl) + apply(X3[, (nl + 1):nc, drop = F], 2, transf)%*%rep(1, nc - nl) + rnorm(n)
+X3 <- data.frame(cbind(X3, Y))
+colnames(X3)[nc+1] <- "y"
+tsk <- makeRegrTask(data = X3, target = "y")
+benchmark(c("regr.lm", "regr.randomForest"), tsk)
+lm3 <- lm(y ~., data = X3)
+# mean((predict(lm3) - Y)^2)
+rf3 <- randomForest(y ~., data = X3, ntree = 2000)
+# mean((predict(rf3) - Y)^2)
+expl_lm <- explain(lm3, data = X3)
+expl_rf <- explain(rf3, data = X3)
+# x3elm <- single_variable(expl_lm, variable = "X3")
+x3erf <- single_variable(expl_rf, variable = "X3")
+plot(x3erf)
+plot(X3[, 3], residuals(lm3))
+x2erf <- single_variable(expl_rf, variable = "X2")
+plot(x2erf)
+x1erf <- single_variable(expl_rf, variable = "X1")
+plot(x1erf)
