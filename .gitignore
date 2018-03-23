@@ -3,3 +3,13 @@
 .RData
 .Ruserdata
 /experiements.R
+/experiments.R
+/all_selected.rda
+/use_case.R
+*.png
+/bd_live.pdf
+/breakdown_default.pdf
+/forest_live.pdf
+/lime_expl.pdf
+/lime_weight.pdf
+/proba_rak.R
