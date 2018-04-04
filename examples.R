@@ -29,7 +29,7 @@ explain_bd <- broken(wine_svm, new_observation = nobs,
 # breakDown: plot
 plot(explain_bd)
 # live
-wine_sim <- sample_locally(wine, winequality_red[5, ], "quality", 500)
+wine_sim <- sample_locally(wine, wine[5, ], "quality", 500)
 wine_sim_svm <- add_predictions(wine, wine_sim, wine_svm)
 wine_expl_live <- fit_explanation(wine_sim_svm, "regr.lm")
 wine_expl_live2 <- fit_explanation(wine_sim_svm, "regr.lm", selection = T)
