@@ -1,4 +1,8 @@
-
+library(dplyr)
+library(mlr)
+library(DALEX)
+library(randomForest)
+library(e1071)
 set.seed(100)
 licznosci <- floor(1000*runif(5, 0, 1))
 liczba_obserwacji <- sum(licznosci)
