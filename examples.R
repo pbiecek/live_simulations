@@ -35,6 +35,9 @@ wine_sim_svm <- add_predictions(wine_sim, wine_svm)
 wine_expl_live <- fit_explanation(wine_sim_svm)
 plot(wine_expl_live, "waterfall")
 plot(wine_expl_live, "forest")
+wine_expl_tree <- fit_explanation(wine_sim_svm, "regr.ctree", kernel = identity_kernel,
+                                  hyperpars = list(maxdepth = 2))
+plot(wine_expl_tree)
 # SHAP
 # requires the use of mlr
 tsk <- makeRegrTask("wine", wine, "quality")
