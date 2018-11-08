@@ -4,10 +4,9 @@ library(e1071)
 library(lime)
 library(breakDown)
 library(live)
-library(shapleyR)
 library(mlr)
-library(tidyr)
-library(dplyr)
+library(shapleyR)
+library(tidyverse)
 library(xtable)
 data('wine')
 nc <- which(colnames(wine) == "quality")
@@ -15,9 +14,9 @@ nc <- which(colnames(wine) == "quality")
 # Model ----
 wine_svm <- svm(quality ~., data = wine)
 # LIME ----
+set.seed(17)
 wine_expl <- lime(wine, wine_svm)
 model_type.svm <- function(x, ...) "regression"
-set.seed(17)
 svm_explained <- lime::explain(wine[5, ], wine_expl, n_features = 11)
 # LIME: plot
 plot_features(svm_explained)
@@ -30,7 +29,11 @@ explain_bd <- broken(wine_svm, new_observation = wine[5, -nc],
 plot(explain_bd)
 plot(explain_bd, plot_distributions = T)
 # live
-wine_sim <- sample_locally(wine, wine[5, ], "quality", 2000, seed = 17)
+wine_sim <- sample_locally(data = wine,
+                           explained_instance = wine[5, ],
+                           explained_var = "quality",
+                           size = 2000,
+                           seed = 17)
 wine_sim_svm <- add_predictions(wine_sim, wine_svm)
 wine_expl_live <- fit_explanation(wine_sim_svm)
 plot(wine_expl_live, "waterfall")
