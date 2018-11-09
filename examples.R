@@ -1,5 +1,8 @@
 # Examples: explaining single predictions.
 # Libraries & data ----
+if(!require(shapleyR)) {
+  devtools::install_github("redichh/shapleyr")
+}
 library(e1071)
 library(lime)
 library(breakDown)
