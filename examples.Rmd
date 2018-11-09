@@ -28,6 +28,7 @@ library(mlr)
 library(shapleyR)
 library(tidyverse)
 library(xtable)
+library(iml)
 ```
 
 Setup the archivist repository
@@ -144,6 +145,15 @@ plot(shp)
 # saveToLocalRepo(shp)
 # e1ae768c305f1df6d89bd564ebe84003
 # aread("pbiecek/live_simulations/arepo/e1ae768c305f1df6d89bd564ebe84003")
+```
+
+Shapley values calculated with the `iml` package.
+
+```{r iml}
+model_svm = Predictor$new(model = wine_svm, data = wine[, -nc], y = wine$quality)
+shapley_iml = Shapley$new(model_svm, x.interest = wine[5, -nc])
+shapley_iml
+plot(shapley_iml)
 ```
 
 Session Info:
