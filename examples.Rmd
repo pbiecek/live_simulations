@@ -46,13 +46,17 @@ nc <- which(colnames(wine) == "quality")
 
 # saveToLocalRepo(wine)
 # 3722f537a2cb2d78daba392d1c7e8bd7
-# aread("mstaniak/live_simulations/3722f537a2cb2d78daba392d1c7e8bd7")
+# aread("pbiecek/live_simulations/arepo/3722f537a2cb2d78daba392d1c7e8bd7")
 ```
 
 Fit SVM (no hyperparameter tuning)
 
 ```{r model}
 wine_svm <- svm(quality ~., data = wine)
+
+# saveToLocalRepo(wine_svm)
+# 1025d57a48c5a037e5a56d8b1b06c1df
+# aread("pbiecek/live_simulations/arepo/1025d57a48c5a037e5a56d8b1b06c1df")
 ````
 
 LIME explanation (set.seed because instances are sampled)
@@ -63,6 +67,10 @@ wine_expl <- lime(wine, wine_svm)
 model_type.svm <- function(x, ...) "regression"
 svm_explained <- lime::explain(wine[5, ], wine_expl, n_features = 11)
 plot_features(svm_explained)
+
+# saveToLocalRepo(svm_explained)
+# 66e9851f52186a38d5773dd5b7f1a669
+# aread("pbiecek/live_simulations/arepo/66e9851f52186a38d5773dd5b7f1a669")
 ````
 
 Break Down explanation
@@ -72,6 +80,10 @@ explain_bd <- broken(wine_svm, new_observation = wine[5, -nc],
                      baseline = "Intercept",
                      keep_distributions = TRUE)
 plot(explain_bd)
+
+# saveToLocalRepo(explain_bd)
+# 1f3204991d06e083f7608cd3f2acce5b
+# aread("pbiecek/live_simulations/arepo/1f3204991d06e083f7608cd3f2acce5b")
 ```
 
 Example plot showing how Break Down works.
@@ -92,6 +104,10 @@ wine_sim_svm <- add_predictions(wine_sim, wine_svm)
 wine_expl_live <- fit_explanation(wine_sim_svm)
 plot(wine_expl_live, "waterfall")
 plot(wine_expl_live, "forest")
+
+# saveToLocalRepo(wine_expl_live)
+# eebe616e0e3bae29d79416cb6e6b91ed
+# aread("pbiecek/live_simulations/arepo/eebe616e0e3bae29d79416cb6e6b91ed")
 ```
 
 LIVE explanation using decision tree.
@@ -100,6 +116,10 @@ LIVE explanation using decision tree.
 wine_expl_tree <- fit_explanation(wine_sim_svm, "regr.ctree", kernel = identity_kernel,
                                   hyperpars = list(maxdepth = 2))
 plot(wine_expl_tree)
+
+# saveToLocalRepo(wine_expl_tree)
+# 32f06fe892f0b02a756d28280b985cbd
+# aread("pbiecek/live_simulations/arepo/32f06fe892f0b02a756d28280b985cbd")
 ```
 
 Shapley values (requires the use of mlr, so model is fitted again)
@@ -120,6 +140,10 @@ shp$values %>%
   xtable()
 class(shp) <- c("shapley.singleValue", "list")
 plot(shp)
+
+# saveToLocalRepo(shp)
+# e1ae768c305f1df6d89bd564ebe84003
+# aread("pbiecek/live_simulations/arepo/e1ae768c305f1df6d89bd564ebe84003")
 ```
 
 Session Info:
