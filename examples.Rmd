@@ -30,11 +30,23 @@ library(tidyverse)
 library(xtable)
 ```
 
+Setup the archivist repository
+
+```{r}
+library(archivist)
+# createLocalRepo("arepo")
+setLocalRepo("arepo")
+```
+
 Wine data (from `live` package):
 
 ```{r data}
 data('wine', package = "live")
 nc <- which(colnames(wine) == "quality")
+
+# saveToLocalRepo(wine)
+# 3722f537a2cb2d78daba392d1c7e8bd7
+# aread("mstaniak/live_simulations/3722f537a2cb2d78daba392d1c7e8bd7")
 ```
 
 Fit SVM (no hyperparameter tuning)
