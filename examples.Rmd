@@ -47,7 +47,7 @@ nc <- which(colnames(wine) == "quality")
 
 # saveToLocalRepo(wine)
 # 3722f537a2cb2d78daba392d1c7e8bd7
-# aread("pbiecek/live_simulations/arepo/3722f537a2cb2d78daba392d1c7e8bd7")
+# archivist::aread("pbiecek/live_simulations/arepo/3722f537a2cb2d78daba392d1c7e8bd7")
 ```
 
 Fit SVM (no hyperparameter tuning)
@@ -57,7 +57,7 @@ wine_svm <- svm(quality ~., data = wine)
 
 # saveToLocalRepo(wine_svm)
 # 1025d57a48c5a037e5a56d8b1b06c1df
-# aread("pbiecek/live_simulations/arepo/1025d57a48c5a037e5a56d8b1b06c1df")
+# archivist::aread("pbiecek/live_simulations/arepo/1025d57a48c5a037e5a56d8b1b06c1df")
 ````
 
 LIME explanation (set.seed because instances are sampled)
@@ -71,7 +71,7 @@ plot_features(svm_explained)
 
 # saveToLocalRepo(svm_explained)
 # 66e9851f52186a38d5773dd5b7f1a669
-# aread("pbiecek/live_simulations/arepo/66e9851f52186a38d5773dd5b7f1a669")
+# archivist::aread("pbiecek/live_simulations/arepo/66e9851f52186a38d5773dd5b7f1a669")
 ````
 
 Break Down explanation
@@ -84,7 +84,7 @@ plot(explain_bd)
 
 # saveToLocalRepo(explain_bd)
 # 1f3204991d06e083f7608cd3f2acce5b
-# aread("pbiecek/live_simulations/arepo/1f3204991d06e083f7608cd3f2acce5b")
+# archivist::aread("pbiecek/live_simulations/arepo/1f3204991d06e083f7608cd3f2acce5b")
 ```
 
 Example plot showing how Break Down works.
@@ -108,7 +108,7 @@ plot(wine_expl_live, "forest")
 
 # saveToLocalRepo(wine_expl_live)
 # eebe616e0e3bae29d79416cb6e6b91ed
-# aread("pbiecek/live_simulations/arepo/eebe616e0e3bae29d79416cb6e6b91ed")
+# archivist::aread("pbiecek/live_simulations/arepo/eebe616e0e3bae29d79416cb6e6b91ed")
 ```
 
 LIVE explanation using decision tree.
@@ -120,7 +120,7 @@ plot(wine_expl_tree)
 
 # saveToLocalRepo(wine_expl_tree)
 # 32f06fe892f0b02a756d28280b985cbd
-# aread("pbiecek/live_simulations/arepo/32f06fe892f0b02a756d28280b985cbd")
+# archivist::aread("pbiecek/live_simulations/arepo/32f06fe892f0b02a756d28280b985cbd")
 ```
 
 Shapley values (requires the use of mlr, so model is fitted again)
@@ -144,7 +144,7 @@ plot(shp)
 
 # saveToLocalRepo(shp)
 # e1ae768c305f1df6d89bd564ebe84003
-# aread("pbiecek/live_simulations/arepo/e1ae768c305f1df6d89bd564ebe84003")
+# archivist::aread("pbiecek/live_simulations/arepo/e1ae768c305f1df6d89bd564ebe84003")
 ```
 
 Shapley values calculated with the `iml` package.
@@ -154,6 +154,10 @@ model_svm = Predictor$new(model = wine_svm, data = wine[, -nc], y = wine$quality
 shapley_iml = Shapley$new(model_svm, x.interest = wine[5, -nc])
 shapley_iml
 plot(shapley_iml)
+
+# saveToLocalRepo(shapley_iml)
+# ee48c1cf298256247c7170da8048cfca
+# archivist::aread("pbiecek/live_simulations/arepo/ee48c1cf298256247c7170da8048cfca")
 ```
 
 Session Info:
